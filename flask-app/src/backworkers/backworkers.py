@@ -3,13 +3,13 @@ import json
 from src import db
 
 
-customers = Blueprint('customers', __name__)
+backworkers = Blueprint('backworkers', __name__)
 
-# Get all customers
-@customers.route('/all', methods=['GET'])
+# Get all back workers
+@backworkers.route('/all', methods=['GET'])
 def get_customers():
     cursor = db.get_db().cursor()
-    cursor.execute('SELECT * FROM Customers')
+    cursor.execute('SELECT * FROM BackWorkers')
     row_headers = [x[0] for x in cursor.description]
     json_data = []
     theData = cursor.fetchall()
@@ -20,11 +20,11 @@ def get_customers():
     the_response.mimetype = 'application/json'
     return the_response
 
-# Get all food items on the menu
-@customers.route('/waitlist', methods=['GET'])
-def get_fooditems():
+# Get back worker by given ID
+@backworkers.route('/backWorkerID=<backWorkerID>', methods=['GET'])
+def get_customer(backWorkerID):
     cursor = db.get_db().cursor()
-    cursor.execute('SELECT * FROM Waitlist')
+    cursor.execute('SELECT * FROM BackWorkers WHERE backWorkerID = {0}'.format(backWorkerID))
     row_headers = [x[0] for x in cursor.description]
     json_data = []
     theData = cursor.fetchall()
