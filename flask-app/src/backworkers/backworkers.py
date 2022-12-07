@@ -9,12 +9,16 @@ backworkers = Blueprint('backworkers', __name__)
 @backworkers.route('/all', methods=['GET'])
 def get_customers():
     cursor = db.get_db().cursor()
+
+    # reformat returned rows to JSON objects
     cursor.execute('SELECT * FROM BackWorkers')
     row_headers = [x[0] for x in cursor.description]
     json_data = []
     theData = cursor.fetchall()
     for row in theData:
         json_data.append(dict(zip(row_headers, row)))
+
+    # construct response
     the_response = make_response(jsonify(json_data))
     the_response.status_code = 200
     the_response.mimetype = 'application/json'
@@ -24,12 +28,16 @@ def get_customers():
 @backworkers.route('/backWorkerID=<backWorkerID>', methods=['GET'])
 def get_customer(backWorkerID):
     cursor = db.get_db().cursor()
+
+    # reformat returned rows to JSON objects
     cursor.execute('SELECT * FROM BackWorkers WHERE backWorkerID = {0}'.format(backWorkerID))
     row_headers = [x[0] for x in cursor.description]
     json_data = []
     theData = cursor.fetchall()
     for row in theData:
         json_data.append(dict(zip(row_headers, row)))
+    
+    # construct response
     the_response = make_response(jsonify(json_data))
     the_response.status_code = 200
     the_response.mimetype = 'application/json'

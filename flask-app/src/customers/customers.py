@@ -9,12 +9,16 @@ customers = Blueprint('customers', __name__)
 @customers.route('/all', methods=['GET'])
 def get_customers():
     cursor = db.get_db().cursor()
+
+    # reformat returned rows to JSON objects
     cursor.execute('SELECT * FROM Customers')
     row_headers = [x[0] for x in cursor.description]
     json_data = []
     theData = cursor.fetchall()
     for row in theData:
         json_data.append(dict(zip(row_headers, row)))
+    
+    # construct response
     the_response = make_response(jsonify(json_data))
     the_response.status_code = 200
     the_response.mimetype = 'application/json'
@@ -24,12 +28,16 @@ def get_customers():
 @customers.route('/waitlist', methods=['GET'])
 def get_fooditems():
     cursor = db.get_db().cursor()
+
+    # reformat returned rows to JSON objects
     cursor.execute('SELECT * FROM Waitlist')
     row_headers = [x[0] for x in cursor.description]
     json_data = []
     theData = cursor.fetchall()
     for row in theData:
         json_data.append(dict(zip(row_headers, row)))
+    
+    # construct response
     the_response = make_response(jsonify(json_data))
     the_response.status_code = 200
     the_response.mimetype = 'application/json'
