@@ -3,7 +3,7 @@
 ## Project Overview
 This application streamlines restaurant operations. Because of frequently changing menus/prices, a lot of restaurants are phasing out paper menus for online ordering systems which makes data easily accessible. Customers, servers/hosts, and cooks/food workers will each have access to the information they need to do their respective jobs, and updating that information is simple and will be instantly reflected for all affected personas.
 
-A brief demo video: https://drive.google.com/file/d/1nXqdLZWuyPocCbAthhDyM-zAiOchYZCe/view?usp=share_link
+A brief demo video: https://drive.google.com/file/d/1nXqdLZWuyPocCbAthhDyM-zAiOchYZCe/view
 
 ## Setup Instructions
 **Important** - you need Docker Desktop installed
