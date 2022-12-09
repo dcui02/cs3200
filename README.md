@@ -1,10 +1,11 @@
-# MySQL + Flask Boilerplate Project
+# CS3200 Final Project
 
-This repo contains a boilerplate setup for spinning up 2 docker containers: 
-1. A MySQL 8 container for obvious reasons
-1. A Python Flask container to implement a REST API
+## Project Overview
+This application streamlines restaurant operations. Because of frequently changing menus/prices, a lot of restaurants are phasing out paper menus for online ordering systems which makes data easily accessible. Customers, servers/hosts, and cooks/food workers will each have access to the information they need to do their respective jobs, and updating that information is simple and will be instantly reflected for all affected personas.
 
-## How to setup and start the containers
+A brief demo video: https://drive.google.com/file/d/1nXqdLZWuyPocCbAthhDyM-zAiOchYZCe/view?usp=share_link
+
+## Setup Instructions
 **Important** - you need Docker Desktop installed
 
 1. Clone this repository.  
@@ -13,13 +14,3 @@ This repo contains a boilerplate setup for spinning up 2 docker containers:
 1. In a terminal or command prompt, navigate to the folder with the `docker-compose.yml` file.  
 1. Build the images with `docker compose build`
 1. Start the containers with `docker compose up`.  To run in detached mode, run `docker compose up -d`. 
-
-## For setting up a Conda Web-Dev environment:
-
-1. `conda create -n webdev python=3.9`
-1. `conda activate webdev`
-1. `pip install flask flask-mysql flask-restful cryptography flask-login`
-
-
-
-
