@@ -7,7 +7,7 @@ backworkers = Blueprint('backworkers', __name__)
 
 # Get all back workers
 @backworkers.route('/all', methods=['GET'])
-def get_customers():
+def get_backworkers():
     cursor = db.get_db().cursor()
 
     # reformat returned rows to JSON objects
@@ -26,7 +26,7 @@ def get_customers():
 
 # Get back worker by given ID
 @backworkers.route('/backWorkerID=<backWorkerID>', methods=['GET'])
-def get_customer(backWorkerID):
+def get_backworker(backWorkerID):
     cursor = db.get_db().cursor()
 
     # reformat returned rows to JSON objects

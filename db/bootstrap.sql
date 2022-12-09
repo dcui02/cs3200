@@ -26,7 +26,7 @@ CREATE TABLE FrontWorkers (
 	firstName varchar(255) NOT NULL,
 	lastName varchar(255) NOT NULL,
 	frontStationID int NOT NULL,
-	dateHired date NOT NULL DEFAULT (CURRENT_DATE),
+	dateHired date NOT NULL DEFAULT (UTC_DATE),
 	salary double NOT NULL,
 	CONSTRAINT fk_0
         FOREIGN KEY (frontStationID) REFERENCES FrontStations (frontStationID)
@@ -124,7 +124,7 @@ CREATE TABLE Orders (
     tableID int NOT NULL,
 	foodItemID int NOT NULL,
 	quantityOrdered int NOT NULL,
-    timeOrdered datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    timeOrdered datetime NOT NULL DEFAULT (UTC_TIMESTAMP),
     CONSTRAINT fk_12
         FOREIGN KEY (backWorkerID) REFERENCES BackWorkers (backWorkerID),
     CONSTRAINT fk_13
@@ -140,7 +140,7 @@ CREATE TABLE Payments (
 	amount double NOT NULL,
 	tip double NOT NULL,
 	paymentMethod varchar(255) NOT NULL,
-    timePaid datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    timePaid datetime NOT NULL DEFAULT (UTC_TIMESTAMP),
     PRIMARY KEY (sequenceNum, customerID),
     CONSTRAINT fk_15
         FOREIGN KEY (frontWorkerID) REFERENCES FrontWorkers (frontWorkerID),
@@ -150,10 +150,10 @@ CREATE TABLE Payments (
 
 CREATE TABLE Waitlist (
     customerID int PRIMARY KEY,
-    phoneNumber varchar(15), -- customer may not want to leave phone number
+    phoneNumber varchar(32), -- customer may not want to leave phone number
     firstName varchar(255) NOT NULL,
     lastName varchar(255), -- last name usually unnecessary
-    joinTime datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    joinTime datetime NOT NULL DEFAULT (UTC_TIMESTAMP),
     exitTime datetime,
     CONSTRAINT fk_17
         FOREIGN KEY (customerID) REFERENCES Customers (customerID)
@@ -229,13 +229,13 @@ insert into Customers (customerID, groupSize, seatingTime, departureTime) values
 insert into Customers (customerID, groupSize, seatingTime, departureTime) values (37, 3, '2020-08-15 12:31:22', '2020-08-15 13:41:41');
 insert into Customers (customerID, groupSize, seatingTime, departureTime) values (38, 5, '2020-12-27 18:09:16', '2020-12-27 19:19:58');
 insert into Customers (customerID, groupSize, seatingTime, departureTime) values (39, 5, '2021-06-12 10:58:43', '2021-06-12 13:38:48');
-insert into Customers (customerID, groupSize, seatingTime, departureTime) values (40, 3, '2021-06-05 01:30:01', '2021-06-05 03:40:09');
-insert into Customers (customerID, groupSize, seatingTime, departureTime) values (41, 1, '2022-03-19 15:33:23', '2022-03-19 16:58:19');
-insert into Customers (customerID, groupSize, seatingTime, departureTime) values (42, 4, '2020-11-18 20:21:55', '2020-11-18 21:36:30');
-insert into Customers (customerID, groupSize, seatingTime, departureTime) values (43, 7, '2021-09-03 16:06:52', '2021-09-03 17:47:34');
-insert into Customers (customerID, groupSize, seatingTime, departureTime) values (44, 2, '2021-01-07 07:45:34', '2021-01-07 08:12:35');
-insert into Customers (customerID, groupSize, seatingTime, departureTime) values (45, 8, '2022-03-23 16:37:14', '2022-03-23 19:23:12');
-insert into Customers (customerID, groupSize, seatingTime, departureTime) values (46, 8, '2020-12-26 20:50:51', '2020-12-26 23:18:33');
+insert into Customers (customerID, groupSize, seatingTime, departureTime) values (40, 3, '2021-06-05 01:30:01', null);
+insert into Customers (customerID, groupSize, seatingTime, departureTime) values (41, 1, '2022-03-19 15:33:23', null);
+insert into Customers (customerID, groupSize, seatingTime, departureTime) values (42, 4, '2020-11-18 20:21:55', null);
+insert into Customers (customerID, groupSize, seatingTime, departureTime) values (43, 7, '2021-09-03 16:06:52', null);
+insert into Customers (customerID, groupSize, seatingTime, departureTime) values (44, 2, '2021-01-07 07:45:34', null);
+insert into Customers (customerID, groupSize, seatingTime, departureTime) values (45, 8, '2022-03-23 16:37:14', null);
+insert into Customers (customerID, groupSize, seatingTime, departureTime) values (46, 8, '2022-12-8 19:20:51', null);
 insert into Customers (customerID, groupSize, seatingTime, departureTime) values (47, 5, null, null);
 insert into Customers (customerID, groupSize, seatingTime, departureTime) values (48, 5, null, null);
 insert into Customers (customerID, groupSize, seatingTime, departureTime) values (49, 4, null, null);
@@ -243,9 +243,10 @@ insert into Customers (customerID, groupSize, seatingTime, departureTime) values
 
 -- dummy table types
 insert into TableTypes (tableTypeID, typeName) values (1, 'Booth');
-insert into TableTypes (tableTypeID, typeName) values (2, 'Outdoor');
+insert into TableTypes (tableTypeID, typeName) values (2, 'Window');
 insert into TableTypes (tableTypeID, typeName) values (3, 'Lazy Susan');
 insert into TableTypes (tableTypeID, typeName) values (4, 'Bar');
+insert into TableTypes (tableTypeID, typeName) values (5, 'Outdoor');
 
 -- dummy front worker stations
 insert into FrontStations (frontStationID, stationName) values (1, 'Host');
@@ -260,16 +261,16 @@ insert into FrontWorkers (frontWorkerID, firstName, lastName, frontStationID, da
 insert into FrontWorkers (frontWorkerID, firstName, lastName, frontStationID, dateHired, salary) values (5, 'Davis', 'Faircloth', 1, '2022-07-29', 22.25);
 
 -- dummy tables
-insert into Tables (tableID, frontWorkerID, customerID, capacity, tableTypeID) values (1, 3, 2, 6, 1);
-insert into Tables (tableID, frontWorkerID, customerID, capacity, tableTypeID) values (2, 3, 7, 3, 3);
-insert into Tables (tableID, frontWorkerID, customerID, capacity, tableTypeID) values (3, 5, 6, 2, 1);
-insert into Tables (tableID, frontWorkerID, customerID, capacity, tableTypeID) values (4, 5, null, 6, 1);
-insert into Tables (tableID, frontWorkerID, customerID, capacity, tableTypeID) values (5, 3, 8, 7, 2);
-insert into Tables (tableID, frontWorkerID, customerID, capacity, tableTypeID) values (6, 4, null, 2, 4);
-insert into Tables (tableID, frontWorkerID, customerID, capacity, tableTypeID) values (7, 2, 5, 1, 2);
-insert into Tables (tableID, frontWorkerID, customerID, capacity, tableTypeID) values (8, 3, 1, 5, 1);
-insert into Tables (tableID, frontWorkerID, customerID, capacity, tableTypeID) values (9, 2, 4, 6, 1);
-insert into Tables (tableID, frontWorkerID, customerID, capacity, tableTypeID) values (10, 1, 3, 2, 2);
+insert into Tables (tableID, frontWorkerID, customerID, capacity, tableTypeID) values (1, 3, 40, 6, 1);
+insert into Tables (tableID, frontWorkerID, customerID, capacity, tableTypeID) values (2, 3, 41, 3, 1);
+insert into Tables (tableID, frontWorkerID, customerID, capacity, tableTypeID) values (3, 5, 42, 2, 2);
+insert into Tables (tableID, frontWorkerID, customerID, capacity, tableTypeID) values (4, null, null, 6, 5);
+insert into Tables (tableID, frontWorkerID, customerID, capacity, tableTypeID) values (5, 3, 43, 7, 4);
+insert into Tables (tableID, frontWorkerID, customerID, capacity, tableTypeID) values (6, null, null, 2, 3);
+insert into Tables (tableID, frontWorkerID, customerID, capacity, tableTypeID) values (7, null, null, 1, 2);
+insert into Tables (tableID, frontWorkerID, customerID, capacity, tableTypeID) values (8, 3, 44, 5, 2);
+insert into Tables (tableID, frontWorkerID, customerID, capacity, tableTypeID) values (9, 2, 45, 6, 2);
+insert into Tables (tableID, frontWorkerID, customerID, capacity, tableTypeID) values (10, 1, 46, 2, 5);
 
 -- dummy back worker stations
 insert into BackStations (backStationID, stationName) values (1, 'Line Cook');
@@ -661,55 +662,55 @@ insert into Payments (sequenceNum, frontWorkerID, customerID, amount, tip, payme
 insert into Payments (sequenceNum, frontWorkerID, customerID, amount, tip, paymentMethod, timePaid) values (2, 5, 8, 53.04, 4.89, 'Amex ending with 9303', '2022-10-23 12:01:35');
 
 -- dummy waitlist entries
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (1, '2029865509', 'Meg', null, '2022-01-30 13:39:54', '2022-01-30 16:26:37');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (2, '3817983931', 'Samson', null, '2022-08-03 08:34:57', '2022-08-03 11:15:37');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (3, '4609192986', 'Eddi', 'Manby', '2021-09-09 01:53:27', '2021-09-09 04:23:59');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (1, '+57 (673) 897-7485', 'Meg', null, '2022-01-30 13:39:54', '2022-01-30 16:26:37');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (2, '+82 (990) 339-8286', 'Samson', null, '2022-08-03 08:34:57', '2022-08-03 11:15:37');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (3, '+92 (913) 543-0655', 'Eddi', 'Manby', '2021-09-09 01:53:27', '2021-09-09 04:23:59');
 insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (4, null, 'Anett', 'Larway', '2021-10-19 05:01:07', '2021-10-19 06:18:22');
 insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (5, null, 'Kerry', null, '2022-09-30 07:53:01', '2022-09-30 09:23:12');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (6, '7933562077', 'Odo', null, '2020-12-31 05:41:21', '2020-12-31 06:02:42');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (7, '1852507413', 'Darlleen', 'Ferrieri', '2020-12-13 12:13:41', '2020-12-13 13:15:30');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (8, '6328392289', 'Gaspar', null, '2021-05-01 20:41:45', '2021-05-01 21:18:50');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (9, '9838451351', 'Rodi', null, '2020-12-18 23:34:50', '2020-12-19 00:27:29');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (10, '8863877788', 'Analise', 'Keat', '2020-12-14 22:50:13', '2020-12-15 00:54:30');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (6, '+1 (916) 416-9885', 'Odo', null, '2020-12-31 05:41:21', '2020-12-31 06:02:42');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (7, '+1 (282) 705-9236', 'Darlleen', 'Ferrieri', '2020-12-13 12:13:41', '2020-12-13 13:15:30');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (8, '+351 (463) 995-6682', 'Gaspar', null, '2021-05-01 20:41:45', '2021-05-01 21:18:50');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (9, '+47 (549) 467-3816', 'Rodi', null, '2020-12-18 23:34:50', '2020-12-19 00:27:29');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (10, '+27 (250) 429-9912', 'Analise', 'Keat', '2020-12-14 22:50:13', '2020-12-15 00:54:30');
 insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (11, null, 'Adah', null, '2021-03-30 05:47:03', '2021-03-30 07:01:20');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (12, '7522603580', 'Oralia', 'Everest', '2021-05-29 14:16:22', '2021-05-29 17:03:12');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (13, '6314604704', 'Briana', 'Farens', '2021-12-04 07:29:07', '2021-12-04 09:05:54');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (14, '4658058658', 'Conan', 'Stallibrass', '2021-09-16 05:45:03', '2021-09-16 07:44:16');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (15, '9382408567', 'Jasen', 'Bedson', '2021-02-18 02:49:34', '2021-02-18 04:36:32');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (12, '+51 (227) 742-4982', 'Oralia', 'Everest', '2021-05-29 14:16:22', '2021-05-29 17:03:12');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (13, '+86 (187) 204-6540', 'Briana', 'Farens', '2021-12-04 07:29:07', '2021-12-04 09:05:54');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (14, '+46 (333) 902-3549', 'Conan', 'Stallibrass', '2021-09-16 05:45:03', '2021-09-16 07:44:16');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (15, '+375 (832) 803-6363', 'Jasen', 'Bedson', '2021-02-18 02:49:34', '2021-02-18 04:36:32');
 insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (16, null, 'Boy', 'Domb', '2021-06-09 11:53:43', '2021-06-09 14:13:25');
 insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (17, null, 'Mable', 'Milbourn', '2021-08-26 21:10:14', '2021-08-27 00:09:17');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (18, '2413237347', 'Betti', null, '2022-09-24 16:08:32', '2022-09-24 16:52:37');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (19, '8405590270', 'Clarissa', 'Marie', '2022-06-17 02:40:59', '2022-06-17 05:01:53');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (20, '3982938908', 'Ingrim', null, '2021-01-15 09:55:18', '2021-01-15 11:19:58');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (18, '+420 (501) 741-5256', 'Betti', null, '2022-09-24 16:08:32', '2022-09-24 16:52:37');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (19, '+7 (941) 268-2328', 'Clarissa', 'Marie', '2022-06-17 02:40:59', '2022-06-17 05:01:53');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (20, '+502 (582) 357-5703', 'Ingrim', null, '2021-01-15 09:55:18', '2021-01-15 11:19:58');
 insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (21, null, 'Ellswerth', 'Chinery', '2021-10-07 12:50:11', '2021-10-07 13:18:45');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (22, '8858085219', 'Gavrielle', null, '2021-12-26 10:29:45', '2021-12-26 12:34:22');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (23, '7132457433', 'Skelly', null, '2021-01-09 13:27:46', '2021-01-09 14:20:21');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (24, '6971304997', 'Lilla', null, '2022-11-19 10:54:39', '2022-11-19 12:50:23');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (22, '+86 (953) 741-8124', 'Gavrielle', null, '2021-12-26 10:29:45', '2021-12-26 12:34:22');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (23, '+33 (589) 134-2493', 'Skelly', null, '2021-01-09 13:27:46', '2021-01-09 14:20:21');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (24, '+62 (866) 537-4792', 'Lilla', null, '2022-11-19 10:54:39', '2022-11-19 12:50:23');
 insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (25, null, 'Jackie', 'Dodell', '2022-11-17 04:10:32', '2022-11-17 05:52:51');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (26, '4169170329', 'Adelle', 'Batterson', '2022-05-03 22:57:51', '2022-05-04 01:02:54');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (27, '9662720708', 'Allyn', null, '2021-10-10 21:48:32', '2021-10-11 00:42:01');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (28, '6857939434', 'Ara', 'Robley', '2022-02-15 08:34:46', '2022-02-15 09:24:07');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (29, '3046113674', 'Garnet', 'Lacroutz', '2022-10-15 14:48:35', '2022-10-15 15:08:18');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (30, '7046469626', 'Marisa', null, '2021-02-06 03:03:36', '2021-02-06 04:33:04');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (31, '7986647944', 'Rozelle', 'Rimour', '2020-12-21 17:14:52', '2020-12-21 19:25:46');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (26, '+33 (456) 309-0865', 'Adelle', 'Batterson', '2022-05-03 22:57:51', '2022-05-04 01:02:54');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (27, null, 'Allyn', null, '2021-10-10 21:48:32', '2021-10-11 00:42:01');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (28, null, 'Ara', 'Robley', '2022-02-15 08:34:46', '2022-02-15 09:24:07');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (29, '+63 (502) 257-6820', 'Garnet', 'Lacroutz', '2022-10-15 14:48:35', '2022-10-15 15:08:18');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (30, '+351 (749) 362-5406', 'Marisa', null, '2021-02-06 03:03:36', '2021-02-06 04:33:04');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (31, '+55 (429) 747-1080', 'Rozelle', 'Rimour', '2020-12-21 17:14:52', '2020-12-21 19:25:46');
 insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (32, null, 'Cissiee', null, '2022-06-09 22:16:04', '2022-06-09 23:40:22');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (33, '5882091876', 'Herrick', null, '2021-03-02 22:07:19', '2021-03-03 00:40:28');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (34, '3482059784', 'Royce', null, '2022-07-29 15:44:12', '2022-07-29 17:51:33');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (33, '+1 (346) 606-2117', 'Herrick', null, '2021-03-02 22:07:19', '2021-03-03 00:40:28');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (34, '+86 (925) 174-4583', 'Royce', null, '2022-07-29 15:44:12', '2022-07-29 17:51:33');
 insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (35, null, 'Olia', null, '2022-09-20 02:21:12', '2022-09-20 03:53:53');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (36, '4277710220', 'Robena', null, '2022-01-15 05:24:30', '2022-01-15 07:31:25');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (37, '5431343995', 'Cosme', null, '2022-05-18 23:25:12', '2022-05-19 01:03:15');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (36, '+374 (856) 450-0194', 'Robena', null, '2022-01-15 05:24:30', '2022-01-15 07:31:25');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (37, '+48 (955) 613-0797', 'Cosme', null, '2022-05-18 23:25:12', '2022-05-19 01:03:15');
 insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (38, null, 'Maggy', 'Faull', '2020-12-20 16:53:18', '2020-12-20 18:58:05');
 insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (39, null, 'Kelly', null, '2021-01-19 12:51:54', '2021-01-19 15:30:53');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (40, '6248145615', 'Link', null, '2021-10-17 11:22:42', '2021-10-17 12:09:27');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (40, '+86 (394) 226-2805', 'Link', null, '2021-10-17 11:22:42', '2021-10-17 12:09:27');
 insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (41, null, 'Allyce', null, '2022-08-22 05:47:33', '2022-08-22 07:11:26');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (42, '9679991156', 'Cole', null, '2022-10-07 04:33:06', '2022-10-07 05:59:00');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (43, '8714398599', 'Dilly', null, '2021-09-29 22:31:02', '2021-09-29 23:56:18');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (44, '7156755253', 'Gibby', 'Atter', '2020-12-20 02:13:55', '2020-12-20 03:28:50');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (42, '+7 (428) 964-8090', 'Cole', null, '2022-10-07 04:33:06', '2022-10-07 05:59:00');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (43, '+1 (744) 414-1975', 'Dilly', null, '2021-09-29 22:31:02', '2021-09-29 23:56:18');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (44, '+86 (667) 567-1966', 'Gibby', 'Atter', '2020-12-20 02:13:55', '2020-12-20 03:28:50');
 insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (45, null, 'Paxon', null, '2022-07-06 12:00:19', '2022-07-06 14:32:43');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (46, '9041308673', 'Lonnie', null, '2021-11-04 14:17:15', '2021-11-04 15:18:52');
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (47, '1892631689', 'Desirae', null, '2022-08-30 11:18:18', null);
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (48, '6645516957', 'Stanislaw', 'Duckering', '2021-03-05 21:36:49', null);
-insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (49, '6621992464', 'Nelly', 'Bent', '2022-03-17 12:54:30', null);
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (46, '+359 (516) 505-0430', 'Lonnie', null, '2021-11-04 14:17:15', '2021-11-04 15:18:52');
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (47, '+55 (521) 816-5696', 'Desirae', null, '2022-08-30 11:18:18', null);
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (48, '+86 (867) 253-3870', 'Stanislaw', 'Duckering', '2021-03-05 21:36:49', null);
+insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (49, '+1 (973) 705-8059', 'Nelly', 'Bent', '2022-03-17 12:54:30', null);
 insert into Waitlist (customerID, phoneNumber, firstName, lastName, joinTime, exitTime) values (50, null, 'Gustaf', null, '2020-12-13 17:37:00', null);
 
 -- dummy front worker shifts

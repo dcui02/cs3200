@@ -30,6 +30,7 @@ def create_app():
     from src.frontworkers.frontworkers  import frontworkers
     from src.foods.foods  import foods
     from src.orders.orders  import orders
+    from src.tables.tables  import tables
 
     # Register the routes that we just imported so they can be properly handled
     app.register_blueprint(customers, url_prefix='/customers')
@@ -37,5 +38,6 @@ def create_app():
     app.register_blueprint(backworkers, url_prefix='/backworkers')
     app.register_blueprint(foods, url_prefix='/foods')
     app.register_blueprint(orders, url_prefix='/orders')
+    app.register_blueprint(tables, url_prefix='/tables')
 
     return app

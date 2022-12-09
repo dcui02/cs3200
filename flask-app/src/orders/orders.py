@@ -56,10 +56,14 @@ def get_orders_grouped():
 
 # update the backWorkerID column of an order
 @orders.route('/update/backWorkerID', methods=['POST'])
-def update_orders():
+def update_order():
     cursor = db.get_db().cursor()
     cursor.execute('UPDATE Orders SET backWorkerID = {0} WHERE orderID = {1}'.format(
         request.form['backWorkerID'], request.form['orderID']))
     db.get_db().commit()
-    return "OrderID: " + request.form['orderID'] + ", backWorkerID: " + request.form['backWorkerID']
-    # return get_orders_grouped()
+    
+    # construct response
+    the_response = make_response()
+    the_response.status_code = 200
+    the_response.mimetype = 'application/json'
+    return the_response
